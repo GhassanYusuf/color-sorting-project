@@ -58,7 +58,7 @@
 //================================================
 
   // Libraries
-  #include  "TCS230.h"
+  #include  "tcs230.h"
 
   // Color Sensor Pins
   #define   sensor_color_s0       4
@@ -68,7 +68,7 @@
   #define   sensor_color_ot       8
 
   // Object Sensor
-  TCS230    ColorSensor(sensor_color_s0, sensor_color_s1, sensor_color_s2, sensor_color_s3, sensor_color_ot);
+  tcs230    ColorSensor(sensor_color_s0, sensor_color_s1, sensor_color_s2, sensor_color_s3, sensor_color_ot);
 
 //================================================
 //  Header End

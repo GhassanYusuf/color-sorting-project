@@ -1,5 +1,5 @@
 
-  class TCS230 {
+  class tcs230 {
 
     private:
 
@@ -23,10 +23,10 @@
       Boundaries  Red, Green, Blue;
 
       // 1st Constructor
-      TCS230() {}
+      tcs230() {}
 
       // 2nd Constructor
-      TCS230(uint8_t s0, uint8_t s1, uint8_t s2, uint8_t s3, uint8_t ot) {
+      tcs230(uint8_t s0, uint8_t s1, uint8_t s2, uint8_t s3, uint8_t ot) {
 
         // Setup Pins Of The Module
         setPins(s0, s1, s2, s3, ot);
