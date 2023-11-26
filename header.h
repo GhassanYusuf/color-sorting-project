@@ -1,75 +1,100 @@
-//================================================
-//  Header Start
-//================================================
+//-----------------------------------------------------------------
+//  Header Top - Files & Libraries
+//-----------------------------------------------------------------
 
-  // Defenition : Serial Port
-  #define   terminal              Serial
+  // Include Pins Files
+  #include "pins.h"
+  
+  // Storing And Reading
+  #include <EEPROM.h>
+  
+  // Button Library
+  #include <Button.h>
 
-//================================================
-//  LCD Control
-//================================================
+  // Servo Library
+  #include <NewServo.h>
 
-  // Library Import
-  #include  <Wire.h> 
-  #include  <LiquidCrystal_I2C.h>
+  // LCD Display Library
+  #include <Wire.h> 
+  #include <LiquidCrystal_I2C.h>
 
-  // Set The LCD address To 0x27 For A 16 Chars And 2 Line Display
+//-----------------------------------------------------------------
+//  Definitions
+//-----------------------------------------------------------------
+
+  #define   _NULL         ""
+  #define   _BLACK        'B'
+  #define   _WHITE        'W'
+  #define   _ORANGE       'O'
+  #define   _GREEN        'G'
+  #define   _NOTREC       'N'
+  #define   _SNGSEP       print_seperator('1', 65)
+  #define   _DBLSEP       print_seperator('=', 65)
+
+  #define   _NUMCOL       3
+
+//-----------------------------------------------------------------
+//  ENUM Litrals
+//-----------------------------------------------------------------
+
+  // Stepper Directions
+  enum  StepperMotorDirection   { FORWARD = 0, BACKWARD = 1 };
+
+//-----------------------------------------------------------------
+//  Objects
+//-----------------------------------------------------------------
+
+  // Button Object
+  Button button_start(btn_start);
+  Button button_clear(btn_clear);
+  
+  // LCD Screen Object
   LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-//================================================
-//  Motor Control
-//================================================
+  // Servo Motor Object
+  NewServo Slide(servo_pin);
 
-  // Pin Defenition
-  #define   motor_balslide_pin    2
-  #define   motor_dropball_pin    3
+//-----------------------------------------------------------------
+//  Data Structures
+//-----------------------------------------------------------------
 
-//------------------------------------------------
-
-  // Library Import
-  #include  <Relay.h>
-
-  // Control Drop Ball Motor
-  Relay     DropBall(motor_dropball_pin, false);
-
-//------------------------------------------------
-
-  // Library Import
-  #include  <NewServo.h>
-
-  // Positions Structure
-  struct Position {
-    uint8_t position;
-    uint8_t colors; 
+  // Minimum And Maximum - Sub Structure
+  struct Range {
+    int16_t Value;                // 32 Bit Integer Data
+    int16_t Min;                  // 16 Bit Integer Data
+    int16_t Max;                  // 16 Bit Integer Data
   };
 
-  // Positions
-  #define   servo_positions               4
-  #define   servo_position_resolution     180/servo_positions
+  // Color Data Structure
+  struct ColorDataStructure {
+    char    Color;                // Dataset Color Litral - 
+    uint8_t Position;             // Servo Direction To Dump
+    Range   Red;                  // Contains Current Value, Minimum, Maximum
+    Range   Green;                // Contains Current Value, Minimum, Maximum
+    Range   Blue;                 // Contains Current Value, Minimum, Maximum
+  };
 
-  // Array Of Positions
-  Position  position[servo_positions];
+  const int structSize = sizeof(ColorDataStructure);
 
-  // Control Ball Slide
-  NewServo  BallSlide(motor_balslide_pin);
+//-----------------------------------------------------------------
+//  Variables
+//-----------------------------------------------------------------
 
-//================================================
-//  Color Sensor
-//================================================
+  // Hall Effect Sensor Variables
+  bool magnet_prv   = false;
+  bool magnet_det   = false;
 
-  // Libraries
-  #include  "tcs230.h"
+  // Based On Number Of Colors
+  int32_t Average[_NUMCOL];
+  int16_t Value[_NUMCOL];
+  uint8_t Count[_NUMCOL];
 
-  // Color Sensor Pins
-  #define   sensor_color_s0       4
-  #define   sensor_color_s1       5
-  #define   sensor_color_s2       6
-  #define   sensor_color_s3       7
-  #define   sensor_color_ot       8
+  // Make Ball Colors
+  ColorDataStructure Ball[_NUMCOL];
 
-  // Object Sensor
-  tcs230    ColorSensor(sensor_color_s0, sensor_color_s1, sensor_color_s2, sensor_color_s3, sensor_color_ot);
+  // Temporary Color Data Buffer
+  ColorDataStructure TempColorData;
 
-//================================================
-//  Header End
-//================================================
+//=================================================================
+//  SETUP
+//=================================================================

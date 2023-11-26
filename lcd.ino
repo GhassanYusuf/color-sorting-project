@@ -2,8 +2,34 @@
 //  Initialization
 //================================================
 
+  void lcd_startup() {
+
+    // Start LCD
+    lcd_Init();
+
+    // Clear
+    lcd_Clear();
+
+    // Light Up
+    lcd_Light();
+
+    // Display Project Name
+    lcd_Welcome_Message();
+
+  }
+
+//================================================
+//  Start Up
+//================================================
+
   void lcd_Init() {
+
+    // Starting LCD
     lcd.init();
+
+    // Press Button To Start
+    terminal.println(" -> LCD Started");
+
   }
 
 //================================================
@@ -57,6 +83,39 @@
     
   }
 
+//------------------------------------------------
+
+  void lcd_Print_Sorting(uint8_t NumColors) {
+
+    // Title
+    String line1 = "Sorting >>>>";
+
+    // Sorting Functions
+    String line2 = "";
+
+    // Loop Through Colors
+    for(int z=0; z<_NUMCOL; z++) {
+      line2 += Ball[z].Color;
+      line2 += ":";
+      line2 += Count[z];
+      if(z < _NUMCOL) {
+        line2 += ", "; 
+      }
+    }
+
+    // Calculating
+    int spaceL1 = (16-line1.length())/2;
+    int spaceL2 = (16-line2.length())/2;
+
+    // Printing
+    lcd.clear();
+    lcd.setCursor(spaceL1, 0);
+    lcd.print(line1);
+    lcd.setCursor(spaceL2, 1);
+    lcd.print(line2);
+    
+  }
+
 //================================================
 //  LCD Blink
 //================================================
@@ -71,7 +130,7 @@
   }
 
 //================================================
-//  LCD Blink
+//  LCD Welcome Message
 //================================================
 
   void lcd_Welcome_Message() {
@@ -87,7 +146,7 @@
     delay(2000);
     lcd_Print("Done By", "3. Ali");
     delay(2000);
-    lcd_Print_Center("Starting >>>", "");
+    lcd_Print_Center("Warming UP >>>", "Color Sensor");
     delay(2000);
   }
 
